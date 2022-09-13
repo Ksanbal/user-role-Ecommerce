@@ -12,7 +12,10 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  // 회원가입
+  /**
+   * 회원가입 - 아이디 중복체크 및 비밀번호 암호화
+   * @param joinUserDto
+   */
   async join(joinUserDto: JoinUserDto) {
     const { email, password } = joinUserDto;
     // [x] 이미 가입된 email인지 체크

@@ -17,16 +17,30 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
+  /**
+   * 회원가입
+   * @param joinUserDto
+   * @returns null
+   */
   @Post('join')
   join(@Body() joinUserDto: JoinUserDto) {
     return this.userService.join(joinUserDto);
   }
 
+  /**
+   * 로그인 후 JWT 발급
+   * @param loginDto
+   * @returns token
+   */
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.authService.jwtLogin(loginDto);
   }
 
+  /**
+   * JWT로 회원정보 가져오기
+   * @returns UserDto
+   */
   @ApiBearerAuth('Access Token')
   @UseGuards(JWTAuthGuard)
   @Get()
