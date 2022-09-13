@@ -1,4 +1,4 @@
 export enum DeliveryWay {
-  DELIVERY, // 배달
-  PICKUP, // 현장수령
+  DELIVERY = 'DELIVERY', // 배달
+  PICKUP = 'PICKUP', // 현장수령
 }
