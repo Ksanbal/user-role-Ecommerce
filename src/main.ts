@@ -27,6 +27,17 @@ async function bootstrap() {
         .setTitle('NestJS Typeorm Template Swagger')
         .setDescription('Writed by Ksanbal')
         .setVersion('1.0')
+        .addBearerAuth(
+          {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            name: 'JWT',
+            description: 'JWT Token',
+            in: 'header',
+          },
+          'Access Token',
+        )
         .build(),
     ),
   );
