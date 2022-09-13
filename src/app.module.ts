@@ -5,6 +5,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { typeOrmAsyncModuleOptions } from './config/typeorm.config';
+import { UserModule } from './api/user/user.module';
+import { OrderModule } from './api/order/order.module';
+import { PayModule } from './api/pay/pay.module';
+import { ProductModule } from './api/product/product.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -18,6 +22,10 @@ import * as Joi from 'joi';
       }),
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncModuleOptions),
+    UserModule,
+    OrderModule,
+    PayModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
