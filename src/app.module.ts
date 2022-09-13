@@ -9,7 +9,9 @@ import { UserModule } from './api/user/user.module';
 import { OrderModule } from './api/order/order.module';
 import { PayModule } from './api/pay/pay.module';
 import { ProductModule } from './api/product/product.module';
+import { AuthModule } from './api/auth/auth.module';
 import * as Joi from 'joi';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,6 +21,9 @@ import * as Joi from 'joi';
       validationSchema: Joi.object({
         MODE: Joi.string().valid('dev', 'prod').required(),
         PORT: Joi.number().default(3000),
+        // JWT
+        JWT_SECRET_KEY: Joi.string().required(),
+        JWT_EXPIRESIN: Joi.number().required(),
       }),
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncModuleOptions),
@@ -26,9 +31,10 @@ import * as Joi from 'joi';
     OrderModule,
     PayModule,
     ProductModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtService],
 })
 export class AppModule {
   // log middleware 적용
