@@ -36,6 +36,7 @@ export class UserEntity extends CommonEntity {
 
   @Column({
     type: 'boolean',
+    default: false,
     nullable: false,
   })
   isStaff: boolean;
