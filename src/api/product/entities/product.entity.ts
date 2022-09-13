@@ -14,6 +14,15 @@ import { OrderBunchEntity } from '../../../api/order/entities/orderBunch.entity'
 })
 export class ProductEntity extends CommonEntity {
   @ApiProperty({
+    example: '상품명',
+  })
+  @Column({
+    type: 'text',
+  })
+  @IsString()
+  title: string;
+
+  @ApiProperty({
     example: '상품에 대한 설명입니다.',
   })
   @Column({
