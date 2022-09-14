@@ -26,6 +26,12 @@ export class OrderService {
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
+  /**
+   * 주문 생성(주문, 주문묶음, 결제)
+   * @param user
+   * @param createOrderDto
+   * @returns OrderDto
+   */
   async create(user: UserEntity, createOrderDto: CreateOrderDto) {
     // [x] 주문한 상품 리스트 가져와서 가격, 배달비, 총 금액 계산
     const { deliveryWay, paymentWay, orderBunchs } = createOrderDto;

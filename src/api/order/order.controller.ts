@@ -13,6 +13,11 @@ import { OrderService } from './order.service';
 export class OrderController {
   constructor(private readonly orderSerivce: OrderService) {}
 
+  /**
+   * 주문하기
+   * @param user
+   * @param createOrderDto
+   */
   @Post()
   async create(
     @CurrentUser() user: UserEntity,
