@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/decorator/user.decorator';
 import { JWTAuthGuard } from '../auth/guard/jwt.guard';
@@ -24,5 +24,14 @@ export class OrderController {
     @Body() createOrderDto: CreateOrderDto,
   ) {
     return await this.orderSerivce.create(user, createOrderDto);
+  }
+
+  /**
+   * 주문 내역
+   * @param user
+   */
+  @Get()
+  async getList(@CurrentUser() user: UserEntity) {
+    return await this.orderSerivce.getList(user);
   }
 }

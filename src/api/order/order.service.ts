@@ -6,6 +6,7 @@ import { DeliveryWay } from '../product/enums/deliveryWay.enum';
 import { UserEntity } from '../user/entities/user.entity';
 import { CreateOrderDto } from './dtos/createOrderBunch.dto';
 import { OrderBunchDto, OrderDto, PayDto } from './dtos/order.dto';
+import { OrderListDto } from './dtos/orderList.dto';
 import { OrderEntity } from './entities/order.entity';
 import { OrderBunchEntity } from './entities/orderBunch.entity';
 import { PayEntity } from './entities/pay.entity';
@@ -108,5 +109,24 @@ export class OrderService {
     const orderBunchDtos = newOrderBunchs.map((nob) => new OrderBunchDto(nob));
     const payDto = new PayDto(newPay);
     return new OrderDto(newOrder, orderBunchDtos, payDto);
+  }
+
+  /**
+   * 사용자의 주문 내역
+   * @param user
+   * @returns OrderListDto[]
+   */
+  async getList(user: UserEntity) {
+    // [x] 사용자의 주문 리스트(join 결재) 구하기
+    const orders = await this.orderRepository.find({
+      where: { orderer: { id: user.id } },
+      order: { createAt: 'DESC' },
+      relations: ['pay'],
+    });
+
+    const orderDtos = orders.map(
+      (order) => new OrderListDto(order, new PayDto(order.pay)),
+    );
+    return orderDtos;
   }
 }
