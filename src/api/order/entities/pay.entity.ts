@@ -8,7 +8,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { IsEnum } from 'class-validator';
-import { OrderEntity } from '../../../api/order/entities/order.entity';
+import { OrderEntity } from './order.entity';
 import { PaymentWay } from '../enums/paymentWay.enum';
 import { PayStatus } from '../enums/payStatus.enum';
 
