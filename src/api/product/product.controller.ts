@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -59,5 +60,16 @@ export class ProductController {
     @Body() createProductDto: CreateProductDto,
   ) {
     return await this.productService.edit(id, createProductDto);
+  }
+
+  /**
+   * 상품 삭제
+   * @param id product_id
+   */
+  @ApiBearerAuth('Access Token')
+  @UseGuards(JWTAuthGuard)
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return await this.productService.delete(id);
   }
 }

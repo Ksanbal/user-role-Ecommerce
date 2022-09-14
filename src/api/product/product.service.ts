@@ -63,4 +63,17 @@ export class ProductService {
       return e;
     }
   }
+
+  /**
+   * 상품 삭제
+   * @param id product id
+   */
+  async delete(id: number) {
+    // [x] 상품 가져오기
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product) throw new NotFoundException('상품을 찾을 수 없습니다.');
+
+    // [x] soft delete
+    product.softRemove();
+  }
 }
