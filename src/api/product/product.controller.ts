@@ -1,11 +1,32 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JWTAuthGuard } from '../auth/guard/jwt.guard';
+import { CreateProductDto } from './dtos/createProduct.dto';
 import { ProductService } from './product.service';
 
 @ApiTags('상품')
 @Controller('api/product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
+
+  /**
+   * 상품 생성
+   * @param createProductDto
+   */
+  @ApiBearerAuth('Access Token')
+  @UseGuards(JWTAuthGuard)
+  @Post()
+  async create(@Body() createProductDto: CreateProductDto) {
+    return await this.productService.create(createProductDto);
+  }
 
   /**
    * 상품 리스트 가져오기
