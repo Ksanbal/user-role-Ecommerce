@@ -45,4 +45,22 @@ export class ProductService {
 
     return new ProductDto(product);
   }
+
+  /**
+   * 상품 수정하기
+   * @param id product_id
+   * @param createProductDto
+   */
+  async edit(id: number, createProductDto: CreateProductDto) {
+    // [x] id로 상품 찾기
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product) throw new NotFoundException('상품을 찾을 수 없습니다.');
+
+    // [x] 상품 정보 업데이트
+    try {
+      await this.productRepository.update({ id }, createProductDto);
+    } catch (e) {
+      return e;
+    }
+  }
 }

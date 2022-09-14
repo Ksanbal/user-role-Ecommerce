@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -38,10 +39,25 @@ export class ProductController {
 
   /**
    * 상품 상세정보 가져오기
-   * @param id
+   * @param id product_id
    */
   @Get(':id')
   async getOne(@Param('id', ParseIntPipe) id: number) {
     return await this.productService.getOne(id);
+  }
+
+  /**
+   * 상품 수정
+   * @param id product_id
+   * @param createProductDto
+   */
+  @ApiBearerAuth('Access Token')
+  @UseGuards(JWTAuthGuard)
+  @Put(':id')
+  async edit(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createProductDto: CreateProductDto,
+  ) {
+    return await this.productService.edit(id, createProductDto);
   }
 }
