@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ProductEntity } from '../product/entities/product.entity';
@@ -128,5 +132,25 @@ export class OrderService {
       (order) => new OrderListDto(order, new PayDto(order.pay)),
     );
     return orderDtos;
+  }
+
+  /**
+   * 사용자의 주문 상세정보
+   * @param id
+   * @param user
+   * @returns OrderDto
+   */
+  async getOne(id: number, user: UserEntity) {
+    // [x] 사용자의 주문 (join 결재) 구하기
+    const order = await this.orderRepository.findOne({
+      where: { id, orderer: { id: user.id } },
+      relations: ['bunchs', 'pay'],
+    });
+
+    if (!order) throw new NotFoundException('주문을 찾을 수 없습니다');
+
+    const orderBunchDtos = order.bunchs.map((ob) => new OrderBunchDto(ob));
+    const payDto = new PayDto(order.pay);
+    return new OrderDto(order, orderBunchDtos, payDto);
   }
 }
