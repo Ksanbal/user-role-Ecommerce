@@ -5,7 +5,7 @@ import {
   Entity,
   JoinColumn,
   OneToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IsEnum } from 'class-validator';
 import { OrderEntity } from './order.entity';
@@ -20,7 +20,9 @@ import { PayStatus } from '../enums/payStatus.enum';
   name: 'pay',
 })
 export class PayEntity extends BaseEntity {
-  @PrimaryColumn('int')
+  @PrimaryGeneratedColumn('increment')
+  id: number;
+
   @OneToOne(() => OrderEntity)
   @JoinColumn()
   order: OrderEntity;
@@ -39,6 +41,7 @@ export class PayEntity extends BaseEntity {
   })
   @Column({
     enum: PayStatus,
+    default: PayStatus.READY,
   })
   @IsEnum(PayStatus)
   status: PayStatus;
