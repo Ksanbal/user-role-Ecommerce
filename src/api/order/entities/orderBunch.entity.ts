@@ -43,6 +43,11 @@ export class OrderBunchEntity extends BaseEntity {
   })
   product: ProductEntity;
 
+  @ApiProperty({
+    example: 1,
+    description: '상품 개수',
+    required: true,
+  })
   @IsNumber()
   @Column({
     type: 'int',

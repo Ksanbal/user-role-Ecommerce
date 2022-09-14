@@ -28,6 +28,7 @@ export class OrderEntity extends CommonEntity {
   })
   @Column({
     type: 'int',
+    default: 0,
   })
   @IsNumber()
   deliveryFee: number;
@@ -46,6 +47,7 @@ export class OrderEntity extends CommonEntity {
   })
   @Column({
     enum: OrderStatus,
+    default: OrderStatus.READY,
   })
   @IsEnum(OrderStatus)
   status: OrderStatus;
