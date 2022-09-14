@@ -16,13 +16,11 @@ export class ProductService {
   /**
    * 상품 등록하기
    * @param createProductDto
-   * @returns ProductDto
    */
   async create(createProductDto: CreateProductDto) {
     // [x] 상품 생성하기
     const newProduct = await this.productRepository.create(createProductDto);
-    const result = await newProduct.save();
-    return new ProductDto(result);
+    await newProduct.save();
   }
 
   /**
