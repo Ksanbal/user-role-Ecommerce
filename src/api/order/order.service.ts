@@ -158,6 +158,32 @@ export class OrderService {
   }
 
   /**
+   * 사용자의 주문 삭제
+   * @param id
+   * @param user
+   */
+  async delete(id: number, user: UserEntity) {
+    // [x] 사용자의 주문 (join 결재) 구하기
+    const order = await this.orderRepository.findOne({
+      where: { id, orderer: { id: user.id } },
+      relations: ['bunchs', 'pay'],
+    });
+
+    if (!order) throw new NotFoundException('주문을 찾을 수 없습니다');
+
+    // 주문 상태가 END 또는 CANCEL인 경우에만 삭제
+    const isEnd = order.status === OrderStatus.END;
+    const isCancel = order.status === OrderStatus.CANCEL;
+    if (isEnd || isCancel) {
+      order.softRemove();
+    } else {
+      throw new BadRequestException(
+        '종료 또는 취소된 주문만 삭제할 수 있습니다',
+      );
+    }
+  }
+
+  /**
    * 사용자 주문 상태 수정
    * 일반 사용자는 주문 CANCEL만 가능합니다.
    * @param id
@@ -195,31 +221,5 @@ export class OrderService {
 
     order.save();
     order.pay.save();
-  }
-
-  /**
-   * 사용자의 주문 삭제
-   * @param id
-   * @param user
-   */
-  async delete(id: number, user: UserEntity) {
-    // [x] 사용자의 주문 (join 결재) 구하기
-    const order = await this.orderRepository.findOne({
-      where: { id, orderer: { id: user.id } },
-      relations: ['bunchs', 'pay'],
-    });
-
-    if (!order) throw new NotFoundException('주문을 찾을 수 없습니다');
-
-    // 주문 상태가 END 또는 CANCEL인 경우에만 삭제
-    const isEnd = order.status === OrderStatus.END;
-    const isCancel = order.status === OrderStatus.CANCEL;
-    if (isEnd || isCancel) {
-      order.softRemove();
-    } else {
-      throw new BadRequestException(
-        '종료 또는 취소된 주문만 삭제할 수 있습니다',
-      );
-    }
   }
 }

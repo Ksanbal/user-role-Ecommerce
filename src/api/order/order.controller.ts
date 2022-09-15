@@ -8,16 +8,29 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { CommonResponse } from '../../common/responses/common.response';
 import { CurrentUser } from '../auth/decorator/user.decorator';
 import { JWTAuthGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
+import { OrderApiDocs } from './docs/order.docs';
 import { CreateOrderDto } from './dtos/createOrderBunch.dto';
 import { EditOrderDto } from './dtos/editOrder.dto';
 import { OrderService } from './order.service';
 
 @ApiTags('주문')
 @ApiBearerAuth('Access Token')
+@ApiUnauthorizedResponse(CommonResponse.UnauthorizedException())
 @UseGuards(JWTAuthGuard)
 @Controller('api/order')
 export class OrderController {
@@ -28,6 +41,9 @@ export class OrderController {
    * @param user
    * @param createOrderDto
    */
+  @ApiOperation(OrderApiDocs.CreateOperation())
+  @ApiCreatedResponse(CommonResponse.CreatedResponse())
+  @ApiBadRequestResponse(CommonResponse.BadRequestException())
   @Post()
   async create(
     @CurrentUser() user: UserEntity,
@@ -40,6 +56,8 @@ export class OrderController {
    * 주문 내역
    * @param user
    */
+  @ApiOperation(OrderApiDocs.GetListOperation())
+  @ApiOkResponse(OrderApiDocs.GetListOkRes())
   @Get()
   async getList(@CurrentUser() user: UserEntity) {
     return await this.orderSerivce.getList(user);
@@ -50,9 +68,25 @@ export class OrderController {
    * @param id order_id
    * @param user
    */
+  @ApiOperation(OrderApiDocs.GetOneOperation())
+  @ApiOkResponse(OrderApiDocs.GetOneOkRes())
+  @ApiNotFoundResponse(CommonResponse.NotFoundException())
   @Get(':id')
   async getOne(@Param('id') id: number, @CurrentUser() user: UserEntity) {
     return await this.orderSerivce.getOne(id, user);
+  }
+
+  /**
+   * 주문 삭제
+   * @param id order_id
+   * @param user
+   */
+  @ApiOperation(OrderApiDocs.DeleteOperation())
+  @ApiOkResponse(CommonResponse.OkResponse())
+  @ApiNotFoundResponse(CommonResponse.NotFoundException())
+  @Delete(':id')
+  async delete(@Param('id') id: number, @CurrentUser() user: UserEntity) {
+    return await this.orderSerivce.delete(id, user);
   }
 
   /**
@@ -61,6 +95,10 @@ export class OrderController {
    * @param user
    * @param editOrderDto
    */
+  @ApiOperation(OrderApiDocs.EditStatusOperation())
+  @ApiOkResponse(CommonResponse.OkResponse())
+  @ApiForbiddenResponse(CommonResponse.ForbiddenException())
+  @ApiNotFoundResponse(CommonResponse.NotFoundException())
   @Patch(':id/status')
   async edit(
     @Param('id') id: number,
@@ -68,15 +106,5 @@ export class OrderController {
     @Body() editOrderDto: EditOrderDto,
   ) {
     return await this.orderSerivce.statusEdit(id, user, editOrderDto);
-  }
-
-  /**
-   * 주문 삭제
-   * @param id order_id
-   * @param user
-   */
-  @Delete(':id')
-  async delete(@Param('id') id: number, @CurrentUser() user: UserEntity) {
-    return await this.orderSerivce.delete(id, user);
   }
 }
