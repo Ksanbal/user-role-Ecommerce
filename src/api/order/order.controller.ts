@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/decorator/user.decorator';
 import { JWTAuthGuard } from '../auth/guard/jwt.guard';
@@ -43,5 +51,15 @@ export class OrderController {
   @Get(':id')
   async getOne(@Param('id') id: number, @CurrentUser() user: UserEntity) {
     return await this.orderSerivce.getOne(id, user);
+  }
+
+  /**
+   * 주문 삭제
+   * @param id order_id
+   * @param user
+   */
+  @Delete(':id')
+  async delete(@Param('id') id: number, @CurrentUser() user: UserEntity) {
+    return await this.orderSerivce.delete(id, user);
   }
 }
