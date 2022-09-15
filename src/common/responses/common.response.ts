@@ -16,6 +16,14 @@ export class CommonResponse {
     };
   }
 
+  // 201
+  static CreatedResponse() {
+    return {
+      description: 'Created',
+      type: responseFormatter({}),
+    };
+  }
+
   // 204
   static NoContentResponse() {
     return {
