@@ -10,6 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Staff } from '../auth/decorator/staff.decorator';
 import { JWTAuthGuard } from '../auth/guard/jwt.guard';
 import { CreateProductDto } from './dtos/createProduct.dto';
 import { ProductService } from './product.service';
@@ -23,6 +24,7 @@ export class ProductController {
    * 상품 생성
    * @param createProductDto
    */
+  @Staff(true)
   @ApiBearerAuth('Access Token')
   @UseGuards(JWTAuthGuard)
   @Post()
@@ -52,6 +54,7 @@ export class ProductController {
    * @param id product_id
    * @param createProductDto
    */
+  @Staff(true)
   @ApiBearerAuth('Access Token')
   @UseGuards(JWTAuthGuard)
   @Put(':id')
@@ -66,6 +69,7 @@ export class ProductController {
    * 상품 삭제
    * @param id product_id
    */
+  @Staff(true)
   @ApiBearerAuth('Access Token')
   @UseGuards(JWTAuthGuard)
   @Delete(':id')
