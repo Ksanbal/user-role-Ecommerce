@@ -20,8 +20,9 @@ export class OrderApiDocs {
   static GetListOkRes() {
     return {
       description: 'Ok',
-      type: responseFormatter(OrderListDto),
-      // isArray: true,
+      // type: responseFormatter(OrderListDto, true),
+      type: OrderListDto,
+      isArray: true,
     };
   }
 
@@ -34,7 +35,8 @@ export class OrderApiDocs {
   static GetOneOkRes() {
     return {
       description: 'Ok',
-      type: responseFormatter(OrderDto),
+      // type: responseFormatter(OrderDto),
+      type: OrderDto,
     };
   }
 

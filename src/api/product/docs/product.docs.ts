@@ -20,7 +20,8 @@ export class ProductApiDocs {
   static GetListOkRes() {
     return {
       description: 'Ok',
-      type: responseFormatter(ProductListDto),
+      // type: responseFormatter(ProductListDto, true),
+      type: ProductListDto,
       isArray: true,
     };
   }
@@ -34,7 +35,8 @@ export class ProductApiDocs {
   static GetOneOkRes() {
     return {
       description: 'Ok',
-      type: responseFormatter(ProductDto),
+      // type: responseFormatter(ProductDto),
+      type: ProductDto,
     };
   }
 

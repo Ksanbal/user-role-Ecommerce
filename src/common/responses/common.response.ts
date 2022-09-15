@@ -12,7 +12,7 @@ export class CommonResponse {
   static OkResponse() {
     return {
       description: 'Ok',
-      type: responseFormatter({}),
+      // type: responseFormatter({}),
     };
   }
 
@@ -20,7 +20,7 @@ export class CommonResponse {
   static CreatedResponse() {
     return {
       description: 'Created',
-      type: responseFormatter({}),
+      // type: responseFormatter({}),
     };
   }
 

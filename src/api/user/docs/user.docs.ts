@@ -1,4 +1,4 @@
-import { responseFormatter } from '../../../common/utils/responseFormatter.utils';
+import { ApiProperty } from '@nestjs/swagger';
 import { UserDto } from '../dtos/user.dto';
 
 export class UserApiDocs {
@@ -18,13 +18,14 @@ export class UserApiDocs {
     };
   }
   static LoginOkRes() {
+    class JwtResponse {
+      @ApiProperty()
+      token: string;
+    }
+
     return {
       description: 'Ok',
-      schema: {
-        example: {
-          token: 'string',
-        },
-      },
+      type: JwtResponse,
     };
   }
 
@@ -37,7 +38,8 @@ export class UserApiDocs {
   static RetrieveOkRes() {
     return {
       description: 'Ok',
-      type: responseFormatter(UserDto),
+      // type: responseFormatter(UserDto),
+      type: UserDto,
     };
   }
 }
