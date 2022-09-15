@@ -1,9 +1,19 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { CommonResponse } from '../../common/responses/common.response';
 import { AuthService } from '../auth/auth.service';
 import { CurrentUser } from '../auth/decorator/user.decorator';
 import { LoginDto } from '../auth/dtos/login.dto';
 import { JWTAuthGuard } from '../auth/guard/jwt.guard';
+import { UserApiDocs } from './docs/user.docs';
 import { JoinUserDto } from './dtos/joinUser.dto';
 import { UserDto } from './dtos/user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -22,6 +32,9 @@ export class UserController {
    * @param joinUserDto
    * @returns null
    */
+  @ApiOperation(UserApiDocs.JoinOperation())
+  @ApiCreatedResponse(CommonResponse.CreatedResponse())
+  @ApiBadRequestResponse(CommonResponse.BadRequestException())
   @Post('join')
   join(@Body() joinUserDto: JoinUserDto) {
     return this.userService.join(joinUserDto);
@@ -32,6 +45,9 @@ export class UserController {
    * @param loginDto
    * @returns token
    */
+  @ApiOperation(UserApiDocs.LoginOperation())
+  @ApiOkResponse(UserApiDocs.LoginOkRes())
+  @ApiUnauthorizedResponse(CommonResponse.UnauthorizedException())
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.authService.jwtLogin(loginDto);
@@ -41,6 +57,9 @@ export class UserController {
    * JWT로 회원정보 가져오기
    * @returns UserDto
    */
+  @ApiOperation(UserApiDocs.RetrieveOperation())
+  @ApiOkResponse(UserApiDocs.RetrieveOkRes())
+  @ApiUnauthorizedResponse(CommonResponse.UnauthorizedException())
   @ApiBearerAuth('Access Token')
   @UseGuards(JWTAuthGuard)
   @Get()
