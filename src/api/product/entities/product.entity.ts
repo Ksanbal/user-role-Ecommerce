@@ -1,7 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CommonEntity } from '../../../common/entities/common-entity';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { DeliveryWay } from '../enums/deliveryWay.enum';
 import { OrderBunchEntity } from '../../../api/order/entities/orderBunch.entity';
 
@@ -17,9 +24,12 @@ export class ProductEntity extends CommonEntity {
     example: '상품명',
   })
   @Column({
-    type: 'text',
+    type: 'varchar',
+    length: 50,
   })
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
   title: string;
 
   @ApiProperty({
@@ -29,6 +39,7 @@ export class ProductEntity extends CommonEntity {
     type: 'text',
   })
   @IsString()
+  @IsNotEmpty()
   description: string;
 
   @ApiProperty({
@@ -39,6 +50,8 @@ export class ProductEntity extends CommonEntity {
     length: 50,
   })
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
   origin: string;
 
   @ApiProperty({
@@ -48,6 +61,7 @@ export class ProductEntity extends CommonEntity {
     enum: DeliveryWay,
   })
   @IsEnum(DeliveryWay)
+  @IsNotEmpty()
   deliveryWay: DeliveryWay;
 
   @ApiProperty({
@@ -57,6 +71,7 @@ export class ProductEntity extends CommonEntity {
     type: 'int',
   })
   @IsNumber()
+  @IsNotEmpty()
   deliveryFee: number;
 
   @ApiProperty({
@@ -66,6 +81,7 @@ export class ProductEntity extends CommonEntity {
     type: 'int',
   })
   @IsNumber()
+  @IsNotEmpty()
   price: number;
 
   @ApiProperty({
@@ -75,6 +91,7 @@ export class ProductEntity extends CommonEntity {
     type: 'int',
   })
   @IsNumber()
+  @IsNotEmpty()
   offedPrice: number;
 
   @ApiProperty({
@@ -84,6 +101,7 @@ export class ProductEntity extends CommonEntity {
     type: 'simple-array',
   })
   @IsArray()
+  @IsNotEmpty()
   tags: string[];
 
   @OneToMany(

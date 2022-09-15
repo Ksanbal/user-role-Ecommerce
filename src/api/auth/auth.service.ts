@@ -34,7 +34,7 @@ export class AuthService {
     }
 
     // [x] jwt 생성 후 반환
-    const payload = { sub: user.id, email };
+    const payload = { sub: user.id, email, isStaff: user.isStaff };
 
     return {
       token: this.jwtService.sign(payload),

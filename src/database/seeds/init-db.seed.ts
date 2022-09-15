@@ -54,8 +54,7 @@ export class CreateSeed implements Seeder {
         },
         {
           id: 3,
-          title:
-            '돌다리농원 100% 예산 순수생사과즙 100포(50포x2BOX 묶음상품) S',
+          title: '돌다리농원 100% 예산 순수생사과즙 100포(50포x2BOX 묶음상품)',
           description:
             '한 포로 챙기는 황금 사과! 꿀보다 더 달달한 생사과즙으로 아침식사대용, 간식대용으로 하루의 건강과 달콤함을 챙겨보세요!',
           origin: '충청남도 예산',
