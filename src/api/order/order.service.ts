@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,6 +10,7 @@ import { ProductEntity } from '../product/entities/product.entity';
 import { DeliveryWay } from '../product/enums/deliveryWay.enum';
 import { UserEntity } from '../user/entities/user.entity';
 import { CreateOrderDto } from './dtos/createOrderBunch.dto';
+import { EditOrderDto } from './dtos/editOrder.dto';
 import { OrderBunchDto, OrderDto, PayDto } from './dtos/order.dto';
 import { OrderListDto } from './dtos/orderList.dto';
 import { OrderEntity } from './entities/order.entity';
@@ -153,6 +155,46 @@ export class OrderService {
     const orderBunchDtos = order.bunchs.map((ob) => new OrderBunchDto(ob));
     const payDto = new PayDto(order.pay);
     return new OrderDto(order, orderBunchDtos, payDto);
+  }
+
+  /**
+   * 사용자 주문 상태 수정
+   * 일반 사용자는 주문 CANCEL만 가능합니다.
+   * @param id
+   * @param user
+   */
+  async statusEdit(id: number, user: UserEntity, editOrderDto: EditOrderDto) {
+    const { status, pay } = editOrderDto;
+
+    // [x] user가 일반 사용자일때 주문의 CANCEL만 가능하도록 적용
+    if (!user.isStaff) {
+      // pay.status를 변경하려는 경우
+      if (pay) {
+        throw new ForbiddenException('승인되지 않은 요청입니다');
+      }
+
+      // status가 CANCEL이 아닌 경우
+      if (status !== OrderStatus.CANCEL) {
+        throw new ForbiddenException('승인되지 않은 요청입니다.');
+      }
+    }
+
+    // [x] 주문 (join 결재) 구하기
+    const order = await this.orderRepository.findOne({
+      where: { id },
+      relations: ['pay'],
+    });
+
+    if (!order) throw new NotFoundException('주문을 찾을 수 없습니다');
+
+    // 상태 업데이트
+    order.status = status;
+    if (pay) {
+      order.pay.status = pay.status;
+    }
+
+    order.save();
+    order.pay.save();
   }
 
   /**

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { CurrentUser } from '../auth/decorator/user.decorator';
 import { JWTAuthGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
 import { CreateOrderDto } from './dtos/createOrderBunch.dto';
+import { EditOrderDto } from './dtos/editOrder.dto';
 import { OrderService } from './order.service';
 
 @ApiTags('주문')
@@ -51,6 +53,21 @@ export class OrderController {
   @Get(':id')
   async getOne(@Param('id') id: number, @CurrentUser() user: UserEntity) {
     return await this.orderSerivce.getOne(id, user);
+  }
+
+  /**
+   * 주문 상태 변경
+   * @param id order_id
+   * @param user
+   * @param editOrderDto
+   */
+  @Patch(':id/status')
+  async edit(
+    @Param('id') id: number,
+    @CurrentUser() user: UserEntity,
+    @Body() editOrderDto: EditOrderDto,
+  ) {
+    return await this.orderSerivce.statusEdit(id, user, editOrderDto);
   }
 
   /**
