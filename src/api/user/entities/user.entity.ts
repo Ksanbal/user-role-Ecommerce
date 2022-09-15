@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CommonEntity } from '../../../common/entities/common-entity';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { OrderEntity } from '../../../api/order/entities/order.entity';
 
 /**
@@ -33,6 +33,17 @@ export class UserEntity extends CommonEntity {
     nullable: false,
   })
   password: string;
+
+  @ApiProperty({
+    example: '서울특별시 00구 000길 000',
+  })
+  @IsString()
+  @IsOptional()
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  address: string;
 
   @Column({
     type: 'boolean',
