@@ -5,7 +5,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { typeOrmAsyncModuleOptions } from './config/typeorm.config';
+import { UserModule } from './api/user/user.module';
+import { OrderModule } from './api/order/order.module';
+import { ProductModule } from './api/product/product.module';
+import { AuthModule } from './api/auth/auth.module';
 import * as Joi from 'joi';
+import { JwtService } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { StaffGuard } from './api/auth/guard/staff.guard';
 
 @Module({
   imports: [
@@ -15,12 +22,26 @@ import * as Joi from 'joi';
       validationSchema: Joi.object({
         MODE: Joi.string().valid('dev', 'prod').required(),
         PORT: Joi.number().default(3000),
+        // JWT
+        JWT_SECRET_KEY: Joi.string().required(),
+        JWT_EXPIRESIN: Joi.number().required(),
       }),
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncModuleOptions),
+    UserModule,
+    OrderModule,
+    ProductModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: StaffGuard,
+    },
+  ],
 })
 export class AppModule {
   // log middleware 적용

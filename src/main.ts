@@ -11,8 +11,8 @@ async function bootstrap() {
   // HttpException Filter
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  // Response Interceptor
-  app.useGlobalInterceptors(new ResponseInterceptor());
+  // // Response Interceptor
+  // app.useGlobalInterceptors(new ResponseInterceptor());
 
   // class-validation
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
@@ -27,6 +27,17 @@ async function bootstrap() {
         .setTitle('NestJS Typeorm Template Swagger')
         .setDescription('Writed by Ksanbal')
         .setVersion('1.0')
+        .addBearerAuth(
+          {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            name: 'JWT',
+            description: 'JWT Token',
+            in: 'header',
+          },
+          'Access Token',
+        )
         .build(),
     ),
   );
